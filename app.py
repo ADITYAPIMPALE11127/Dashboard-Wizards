@@ -22,7 +22,7 @@ st.set_page_config(
 
 # Constants
 CHURN_THRESHOLD = 0.4  # Default classification threshold
-MODEL_PATH = './models/churn_model_tuned_20250614_190352.pkl'
+MODEL_PATH = 'churn_model_tuned.pkl'
 
 @st.cache_resource
 def cached_load_model():
