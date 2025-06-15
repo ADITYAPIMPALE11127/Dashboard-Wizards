@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: churn-prediction-dashboard
+    name: churn-prediction
     runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: streamlit run app.py
-    envVars:
-      - key: MPLBACKEND
-        value: Agg
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: |
+      cd src &&
+      streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
