@@ -9,16 +9,11 @@ import matplotlib
 matplotlib.use("Agg")  # Must come before pyplot
 import matplotlib.pyplot as plt
 import seaborn as sns
-import joblib
-import time
-import json
 
 # Scikit-learn metrics
 from sklearn.metrics import (
     roc_curve,
     auc,
-    accuracy_score, 
-    classification_report
 )
 
 # Local application imports
@@ -81,7 +76,7 @@ def clean_data(df):
         df[col] = df[col].fillna(df[col].mode()[0])
     
     return df
-
+# UI PART
 def main():
     """Main application flow"""
     st.title("🚀 Customer Churn Prediction Dashboard")
