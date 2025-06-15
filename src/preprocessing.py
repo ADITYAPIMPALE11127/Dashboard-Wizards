@@ -39,13 +39,19 @@ def preprocess_data(df, train_mode=True):
     # STEP 3: Handle specific columns
     if 'TotalCharges' in df.columns:
         df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
-    
+        # Optional smart imputation if MonthlyCharges and tenure exist
+        if 'MonthlyCharges' in df.columns and 'tenure' in df.columns:
+            missing_total = df['TotalCharges'].isna().sum()
+            if missing_total > 0:
+                df['TotalCharges'].fillna(df['MonthlyCharges'] * df['tenure'], inplace=True)
+
     # STEP 4: Missing value imputation
     for col in df.columns:
         if df[col].dtype in [np.float64, np.int64]:
             df[col] = df[col].fillna(df[col].median())
         else:
-            df[col] = df[col].fillna(df[col].mode()[0])
+            if df[col].isnull().any():
+                df[col] = df[col].fillna(df[col].mode()[0])
     
     # STEP 5: Custom encoding for service features
     service_mapping = {
@@ -80,8 +86,8 @@ def preprocess_data(df, train_mode=True):
     # STEP 8: One-hot encoding for multi-class features
     multi_class_cols = ['InternetService', 'Contract', 'PaymentMethod']
     df = pd.get_dummies(df, 
-                       columns=[col for col in multi_class_cols if col in df.columns], 
-                       drop_first=True)
+                        columns=[col for col in multi_class_cols if col in df.columns], 
+                        drop_first=True)
     
     # STEP 9: Handle remaining categorical columns
     le = LabelEncoder()
@@ -94,6 +100,11 @@ def preprocess_data(df, train_mode=True):
     # STEP 10: Convert booleans to integers
     bool_cols = df.select_dtypes(include='bool').columns
     df[bool_cols] = df[bool_cols].astype(int)
+
+    # Optional STEP 11: Scaling (disabled by default)
+    # from sklearn.preprocessing import StandardScaler
+    # scaler = StandardScaler()
+    # df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
     
     # Return appropriate values based on mode
     return (df, y) if train_mode and y is not None else df

@@ -1,20 +1,33 @@
 # app.py (final production-ready version)
+import os
+os.environ['MPLBACKEND'] = 'Agg'  # Critical for server environments
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.use("Agg") 
+matplotlib.use("Agg")  # Must come before pyplot
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
 import time
 import json
-import os
-from sklearn.metrics import roc_curve, auc, accuracy_score, classification_report
-from preprocessing import preprocess_data
-from model import load_model, evaluate_model, plot_feature_importance
-from streamlit_lottie import st_lottie  # Optional
 
+# Scikit-learn metrics
+from sklearn.metrics import (
+    roc_curve,
+    auc,
+    accuracy_score, 
+    classification_report
+)
+
+# Local application imports
+from preprocessing import preprocess_data
+from model import (
+    load_model,
+    evaluate_model,
+    plot_feature_importance
+)
 # Page config
 st.set_page_config(
     page_title="Churn Prediction Engine",
@@ -23,8 +36,8 @@ st.set_page_config(
 )
 
 # Constants
-CHURN_THRESHOLD = 0.4  # Default classification threshold
-MODEL_PATH = 'churn_model_tuned.pkl'
+CHURN_THRESHOLD = 0.6  # Default classification threshold
+MODEL_PATH = '../models/churn_model_tuned.pkl'
 
 @st.cache_resource
 def cached_load_model():
@@ -253,12 +266,16 @@ def main():
         # Full dataset download
         csv_data = df.to_csv(index=False)
         st.download_button(
-            "📥 Download Full Predictions",
-            csv_data,
-            "full_churn_predictions.csv",
-            "text/csv"
+          label="✨ Download Full Predictions (CSV)",
+        data=csv_data,
+        file_name="customer_churn_predictions.csv",
+        mime="text/csv",
+        help="Contains all customer data with churn probabilities",
+        use_container_width=True,  # Makes button full width
+        type="primary",  # Makes button more prominent (Streamlit >= 1.16)
+        key="full_export_btn"  # Unique key to avoid conflicts
         )
-
+        st.caption("File includes: Customer ID, Churn Probability, and all original features")
     elif page in ["Model Performance", "Customer Analysis"]:
         st.warning("Please upload data on the Home page first")
 

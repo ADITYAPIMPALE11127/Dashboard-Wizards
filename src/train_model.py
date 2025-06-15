@@ -174,7 +174,7 @@ def train_in_chunks(data_path, chunk_size=2000, test_size=0.2, tune_hyperparams=
 
 def main():
     """Main program execution"""
-    DATA_PATH = './data/telco_train.csv'
+    DATA_PATH = '../data/telco_train.csv'
     
     # Set to True for hyperparameter tuning (better accuracy but slower)
     TUNE_HYPERPARAMS = True
