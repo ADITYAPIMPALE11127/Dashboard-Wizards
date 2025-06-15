@@ -37,8 +37,8 @@ st.set_page_config(
 
 # Constants
 CHURN_THRESHOLD = 0.6  # Default classification threshold
-MODEL_PATH = '../models/churn_model_tuned.pkl'
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, '../models/churn_model_tuned.pkl')
 @st.cache_resource
 def cached_load_model():
     """Cached model loader with validation"""
