@@ -81,7 +81,12 @@ def main():
     """Main application flow"""
     st.title("🚀 Customer Churn Prediction Dashboard")
     st.markdown("Upload customer data to identify churn risks")
-    
+
+# Team members section
+    st.markdown("""
+    **Developed by Dashboard Wizards Team:**  
+    Aditya Pimpale | Chaithra Shree H S | Pranjal Thakare
+""")
     # Sidebar navigation
     with st.sidebar:
         st.title("Navigation")
@@ -89,10 +94,10 @@ def main():
                         ["Home", "Model Performance", "Customer Analysis"],
                         label_visibility="collapsed")
         
-        # Debug info (hidden by default)
-        if st.checkbox("Show debug info", False):
-            st.write(f"Model path: {os.path.abspath(MODEL_PATH)}")
-            st.write(f"Model exists: {os.path.exists(MODEL_PATH)}")
+        # # Debug info (hidden by default)
+        # if st.checkbox("Show debug info", False):
+        #     st.write(f"Model path: {os.path.abspath(MODEL_PATH)}")
+        #     st.write(f"Model exists: {os.path.exists(MODEL_PATH)}")
 
     # File processing page
     if page == "Home":
