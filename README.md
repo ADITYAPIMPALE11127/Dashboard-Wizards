@@ -4,8 +4,8 @@ A machine learning web application that predicts which fintech users are likely 
 
 ## 🔗 Quick Links  
 - [Data Preprocessing](docs/preprocessing-readme.md)  
-- [Project PDF Explanation](https://drive.google.com/...)  
-- [Canva Presentation](https://www.canva.com/...)  
+- [Project Presentation Video Link](https://drive.google.com/...)  
+- [Canva Presentation File PPT](https://www.canva.com/...)  
 ---
 
 ## 📈 Project Overview
