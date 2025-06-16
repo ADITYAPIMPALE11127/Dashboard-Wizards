@@ -39,7 +39,7 @@ Customer churn is a critical challenge in fintech. Retaining users is more cost-
 ✅ Built with an intuitive Streamlit web dashboard  
 
 ---
-
+### Project File Structure
 ```bash
 DASHBOARD-WIZARD/
 │
