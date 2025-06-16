@@ -1,100 +1,105 @@
-# Telco Customer Churn - Data Preprocessing
 
-This project focuses on cleaning and preparing the Telco Customer Churn dataset for building machine learning models. The code is modular, readable, and designed to help teams easily plug into the cleaned dataset for analysis and training.
+```markdown
+# Data Preprocessing Documentation
+
+## preprocess_data(df, train_mode=True)
+
+### Parameters
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `df` | pandas.DataFrame | Input raw data |
+| `train_mode` | bool | If True, handles target variable |
+
+### Returns
+| Return | Type | Description |
+|--------|------|-------------|
+| `df` | pandas.DataFrame | Processed features |
+| `y` | pandas.Series | Target variable (only if train_mode=True) |
 
 ---
 
-## 📁 Files Overview
+## Processing Steps
 
-| File Name            | Description |
-|----------------------|-------------|
-| `preprocessing.py`   | Main script to load, clean, and preprocess the dataset. |
-| `cleaned_data.csv`   | (Optional) Output file generated after preprocessing the input dataset. |
-| `main-test.ipynb | to run the preprocessing.py file and for testing and debuging |
----
+### 1. Target Handling
+- Detects 'churned' column
+- Separates target if `train_mode=True`
+- Always removes from features
 
-## ▶️ How to Use
-
-1. Place your raw dataset CSV file (e.g., `telco.csv`) in the same folder as `preprocessing.py`.
-
-2. Run the following Python code:
-
+### 2. Data Cleaning
 ```python
-from preprocessing import load_and_clean_data
+df.drop_duplicates(inplace=True)
+df.drop(columns=id_cols, inplace=True)  # id_cols = ['customerID', ...]
+df = df.loc[:, df.nunique() > 1]  # Remove constant columns
+```
 
-# Load and clean data
-df = load_and_clean_data("telco.csv", save_cleaned_csv=True)
-This will:
+### 3. Column-Specific Processing
+**TotalCharges:**
+```python
+# Convert to numeric + smart impute
+df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+df['TotalCharges'].fillna(df['MonthlyCharges'] * df['tenure'], inplace=True)
+```
 
-Return a cleaned and preprocessed DataFrame df
+### 4. Missing Value Treatment
+| Data Type | Method | Example Columns |
+|-----------|--------|-----------------|
+| Numeric | Median | tenure, MonthlyCharges |
+| Categorical | Mode | PaymentMethod, Contract |
 
-Save a cleaned version as cleaned_data.csv (if save_cleaned_csv=True)
+### 5. Feature Encoding
+**Service Features Encoding:**
+```python
+service_mapping = {
+    'No internet service': 0,
+    'No phone service': 0,
+    'No': 1,
+    'Yes': 2
+}
+# Applied to: OnlineSecurity, OnlineBackup, DeviceProtection, etc.
+```
 
-🔍 What load_and_clean_data() Does
-Step	Description
-1️⃣	Load the CSV file into a pandas DataFrame
-2️⃣	Remove duplicate records
-3️⃣	Drop columns that look like IDs (columns with 'id' in name)
-4️⃣	Remove constant columns (same value for all rows)
-5️⃣	Convert TotalCharges to numeric
-6️⃣	Fill missing values: median for numeric columns, mode for categorical columns
-7️⃣	Create new encoded columns for special services like StreamingTV, OnlineSecurity, etc.
-8️⃣	Convert Yes/No columns (Partner, PhoneService, etc.) to 1/0
-9️⃣	Encode gender column: Male → 1, Female → 0
-🔟	One-hot encode categorical columns like InternetService, Contract, PaymentMethod
-🔁	Label encode any remaining binary string columns
-🔚	Convert boolean-type columns to integers
+**Other Encodings:**
+| Original | Encoded | Columns |
+|----------|---------|---------|
+| Yes/No | 1/0 | Partner, Dependents |
+| Male/Female | 1/0 | gender |
+| Multi-class | One-hot | InternetService, Contract |
 
-🔢 Special Encoding Explanation
-For service-related columns like:
+---
 
-OnlineSecurity
+## Output Specifications
+### Generated Columns
+- All original columns (cleaned)
+- `*_enc` columns for service features
+- One-hot encoded categoricals (prefixes: `Contract_`, `PaymentMethod_`, etc.)
+- All values converted to numeric
 
-OnlineBackup
+### Expected Output Shape
+- Features: (n_samples, n_features) 
+  - Typical: ~20 columns after processing
+- Target: (n_samples,) [when train_mode=True]
 
-DeviceProtection
+---
 
-TechSupport
+## Dependencies
+```python
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+```
 
-StreamingTV
+## Usage Example
+```python
+# For training
+X_train, y_train = preprocess_data(raw_train_df, train_mode=True)
 
-StreamingMovies
+# For inference
+X_test = preprocess_data(raw_test_df, train_mode=False)
+```
 
-MultipleLines
-
-We created new columns (e.g., OnlineSecurity_enc) using the mapping below:
-
-Original Value	Encoded As	Meaning
-No internet service	0	Service not applicable (no internet)
-No phone service	0	Service not applicable (no phone line)
-No	1	Service available but not used
-Yes	2	Service available and in use
-False (boolean)	1	Treated like "No"
-True (boolean)	2	Treated like "Yes"
-
-This helps the model distinguish between:
-
-🚫 Not applicable service (0)
-
-❌ Declined but available service (1)
-
-✅ Accepted and in use service (2)
-
-✅ Additional Encoding Summary
-Binary Yes/No columns → replaced with 1 (Yes) / 0 (No)
-
-Gender: Male → 1, Female → 0
-
-Multi-class text columns (InternetService, Contract, PaymentMethod) → one-hot encoded
-
-Remaining binary object columns → label encoded if they have exactly 2 unique values
-
-Boolean columns → converted to integers (1 for True, 0 for False)
-
-🧠 For Model Training
-Make sure to encode the target column Churn as Yes → 1 and No → 0 (if not already handled).
-
-You can use the cleaned data from the returned df or directly from cleaned_data.csv.
-
-Optionally, scale numeric features like tenure, MonthlyCharges, and TotalCharges before model training.
+## Notes
+1. Test data must contain all columns present in training data
+2. No feature scaling is applied by default
+3. Boolean columns automatically converted to int (1/0)
+```
 
