@@ -2,6 +2,10 @@
 
 A machine learning web application that predicts which fintech users are likely to **churn** (stop using the app), and displays those predictions along with key insights in an interactive **Streamlit dashboard**.
 
+## 🔗 Quick Links  
+- [Data Preprocessing](docs/preprocessing-readme.md)  
+- [Project PDF Explanation](https://drive.google.com/...)  
+- [Canva Presentation](https://www.canva.com/...)  
 ---
 
 ## 📈 Project Overview
@@ -103,21 +107,9 @@ Key steps include:
 - Encoding categorical features (binary Yes/No, gender, service-level, and one-hot encoding)
 - Saving a cleansed version as cleaned_data.csv
   
-Refer to preprocessing-readme.md for detailed steps and encoding schema.
-
----
-
-## ⚠️ Known Issues & Future Improvements
- Add SHAP/LIME explanations for per-user churn predictions
-
- - Enable live data streaming into the dashboard
- - Optimize performance for large customer datasets
- - Add unit tests and CI/CD for model pipeline
-
----
 
 ## 📩 Contact
-Created by Adithya Pimpale
+Created by Adithya Pimpale and Chaithra shree
 📧 pimpaleaditya2@gmail.com
 
 
