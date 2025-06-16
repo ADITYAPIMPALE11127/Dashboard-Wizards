@@ -40,17 +40,36 @@ Customer churn is a critical challenge in fintech. Retaining users is more cost-
 
 ---
 
-## 📁 Project Structure
-
-Dashboard-Wizards/
-├── app.py                    # Main Streamlit dashboard
-├── train_model.py           # Model training script
-├── churn_model_best.pkl     # Trained ML model
-├── preprocessing.py         # Preprocessing pipeline (Telco & fintech)
-├── preprocessing-readme.md  # Documentation for preprocessing steps
-├── data/                    # Raw & sample datasets
-├── test_debug/              # Debugging/test utilities
-└── __pycache__/             # Python cache (can be ignored)
+```bash
+DASHBOARD-WIZARD/
+│
+├── 📁 __pycache__/                  # Python cache files
+│
+├── 📁 data/                         # Directory for storing raw or processed datasets
+│
+├── 📁 docs/                         # Project documentation
+│   └── preprocessing-readme.md     # Notes on preprocessing steps
+│
+├── 📁 eda/                          # Notebooks for Exploratory Data Analysis
+│   ├── main_test.ipynb             # EDA notebook for testing main ideas
+│   └── visualize.ipynb             # Notebook for visualizing insights
+│
+├── 📁 models/                       # Trained model storage
+│   └── churn_model_tuned.pkl       # Serialized tuned model (pkl file)
+│
+├── 📁 src/                          # Source code
+│   ├── __pycache__/                # Python cache files
+│   ├── app.py                      # Streamlit web application entry point
+│   ├── churn_model_tuned.pkl       # Local copy of the trained model
+│   ├── model.py                    # Model loading and prediction functions
+│   ├── preprocessing.py            # Data preprocessing logic
+│   └── train_model.py              # Training script for churn model
+│
+├── 📁 visualized_outputs/          # Output visualizations and charts
+│
+├── README.md                       # Project overview and usage instructions
+├── render.yaml                     # Render deployment configuration
+└── requirements.txt                # Python dependencies list
 
 ---
 
