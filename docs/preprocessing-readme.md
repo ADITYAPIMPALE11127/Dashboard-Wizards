@@ -1,42 +1,43 @@
+# 📊 Data Preprocessing Documentation
 
-```markdown
-# Data Preprocessing Documentation
+## 🔧 Function: `preprocess_data(df, train_mode=True)`
 
-## preprocess_data(df, train_mode=True)
+### 🧾 Parameters
 
-# Data Preprocessing Documentation
+| Parameter    | Type              | Description                                                                  |
+|--------------|-------------------|------------------------------------------------------------------------------|
+| `df`         | pandas.DataFrame  | Input raw data (expected to contain Telco customer churn features)           |
+| `train_mode` | bool              | If `True` (default), separates the target variable `'churned'`.              |
 
-## Function: `preprocess_data(df, train_mode=True)`
+### 🔁 Returns
 
-### Parameters
+| Return       | Type              | Description                                                                  |
+|--------------|-------------------|------------------------------------------------------------------------------|
+| `df`         | pandas.DataFrame  | Processed feature matrix with all numeric values.                            |
+| `y`          | pandas.Series     | Target variable series (only returned when `train_mode=True`).               |
 
-| Parameter   | Type            | Description                                                                 |
-|-------------|-----------------|-----------------------------------------------------------------------------|
-| `df`        | pandas.DataFrame | Input raw data (expected to contain Telco customer churn features)          |
-| `train_mode`| bool            | If `True` (default), handles target variable `'churned'` separation        |
+---
 
-### Returns
+## 🧼 Processing Pipeline
 
-| Return      | Type            | Description                                                                 |
-|-------------|-----------------|-----------------------------------------------------------------------------|
-| `df`        | pandas.DataFrame | Processed feature matrix with all numeric values                            |
-| `y`         | pandas.Series    | Target variable series (only returned when `train_mode=True`)               |
+### 1. Initial Setup  
+- Creates a copy of the input DataFrame.  
+- If `train_mode=True`, separates the target column `'churned'` from the features.
 
-## Processing Pipeline
+---
 
-1. **Initial Setup**  
-   - Creates copy of input DataFrame
-   - Handles target variable separation if present and `train_mode=True`
+### 2. Data Cleaning
 
-2. **Data Cleaning**  
-   ```python
-   # Remove duplicates and ID columns
-   df.drop_duplicates(inplace=True)
-   id_cols = [col for col in df.columns if 'id' in col.lower()]
-   df.drop(columns=id_cols, inplace=True, errors='ignore')
-   
-   # Remove constant columns
-   df = df.loc[:, df.nunique() > 1]
+```python
+# Remove duplicates and ID columns
+df.drop_duplicates(inplace=True)
+id_cols = [col for col in df.columns if 'id' in col.lower()]
+df.drop(columns=id_cols, inplace=True, errors='ignore')
+
+# Remove constant columns
+df = df.loc[:, df.nunique() > 1]
+
+
 
 ### 3. Column-Specific Processing
 **TotalCharges:**
