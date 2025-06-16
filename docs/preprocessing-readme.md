@@ -4,33 +4,39 @@
 
 ## preprocess_data(df, train_mode=True)
 
+# Data Preprocessing Documentation
+
+## Function: `preprocess_data(df, train_mode=True)`
+
 ### Parameters
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `df` | pandas.DataFrame | Input raw data |
-| `train_mode` | bool | If True, handles target variable |
+
+| Parameter   | Type            | Description                                                                 |
+|-------------|-----------------|-----------------------------------------------------------------------------|
+| `df`        | pandas.DataFrame | Input raw data (expected to contain Telco customer churn features)          |
+| `train_mode`| bool            | If `True` (default), handles target variable `'churned'` separation        |
 
 ### Returns
-| Return | Type | Description |
-|--------|------|-------------|
-| `df` | pandas.DataFrame | Processed features |
-| `y` | pandas.Series | Target variable (only if train_mode=True) |
 
----
+| Return      | Type            | Description                                                                 |
+|-------------|-----------------|-----------------------------------------------------------------------------|
+| `df`        | pandas.DataFrame | Processed feature matrix with all numeric values                            |
+| `y`         | pandas.Series    | Target variable series (only returned when `train_mode=True`)               |
 
-## Processing Steps
+## Processing Pipeline
 
-### 1. Target Handling
-- Detects 'churned' column
-- Separates target if `train_mode=True`
-- Always removes from features
+1. **Initial Setup**  
+   - Creates copy of input DataFrame
+   - Handles target variable separation if present and `train_mode=True`
 
-### 2. Data Cleaning
-```python
-df.drop_duplicates(inplace=True)
-df.drop(columns=id_cols, inplace=True)  # id_cols = ['customerID', ...]
-df = df.loc[:, df.nunique() > 1]  # Remove constant columns
-```
+2. **Data Cleaning**  
+   ```python
+   # Remove duplicates and ID columns
+   df.drop_duplicates(inplace=True)
+   id_cols = [col for col in df.columns if 'id' in col.lower()]
+   df.drop(columns=id_cols, inplace=True, errors='ignore')
+   
+   # Remove constant columns
+   df = df.loc[:, df.nunique() > 1]
 
 ### 3. Column-Specific Processing
 **TotalCharges:**
@@ -102,4 +108,3 @@ X_test = preprocess_data(raw_test_df, train_mode=False)
 2. No feature scaling is applied by default
 3. Boolean columns automatically converted to int (1/0)
 ```
-
